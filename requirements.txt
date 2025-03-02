@@ -1,0 +1,4 @@
+ultralytics>=8.0.0  # For YOLOv8
+opencv-python>=4.5.0  # For video/image processing
+requests>=2.26.0  # For sending FCM alerts
+numpy>=1.21.0  # Often required by OpenCV/YOLO
