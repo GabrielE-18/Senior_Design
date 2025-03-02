@@ -1,6 +1,0 @@
-path: /path/to/datasetn    #data set path to our cows
-train: train/images       # different cow anglews pictures
-val: val/images      # different cow anglews pictures for validation
-names:
-  0: cow
-  1: person  # Add other classes if needed
