@@ -3,9 +3,9 @@ import json
 import requests
 from google.auth.transport.requests import Request
 from google.oauth2 import service_account
-from config import SERVICE_ACCOUNT_PATH, DEVICE_TOKEN
+from config import SERVICE_ACCOUNT_PATH, DEVICE_TOKEN , fcm_server_key
 
-def send_fcm_alert(message: str, fcm_server_key: str, device_token: str) -> None:
+def send_fcm_alert(message: str, fcm_server_key: str, DEVICE_TOKEN: str) -> None:
     """Send a push notification via Firebase Cloud Messaging (FCM)."""
     headers = {
         "Authorization": f"key={fcm_server_key}",
@@ -13,7 +13,7 @@ def send_fcm_alert(message: str, fcm_server_key: str, device_token: str) -> None
     }
 
     payload = {
-        "to": device_token,
+        "to": DEVICE_TOKEN,
         "notification": {
             "title": "Barn Alert",
             "body": message,
@@ -29,5 +29,6 @@ def send_fcm_alert(message: str, fcm_server_key: str, device_token: str) -> None
         )
         response.raise_for_status()
         print("Alert sent successfully!")
-    except Exception as e:
+    except requests.exceptions.RequestException as e:
         print(f"Failed to send alert: {str(e)}")
+        print(f"Response: {response.text}")
