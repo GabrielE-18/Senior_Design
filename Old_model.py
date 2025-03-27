@@ -1,33 +1,61 @@
-from ultralytics import YOLO
+import hhhhhh
 import cv2
+import numpy as np
+from ultralytics import YOLO
+from boxmot import BotSort
+from boxmot.utils.ops import letterbox
+from pathlib import Path
 
-# Load the YOLOv8 model (you can replace 'yolov8x.pt' with 'yolov8n.pt', 'yolov8l.pt', etc.)
-model = YOLO('yolov8n.pt')  # Use 'yolov8n.pt' for faster, lightweight model
+# Load YOLOv8 model
+device = hhhhhh.device('cuda:0') # or 'cuda'
+model = YOLO("yolov8n.pt")  # Replace with your custom model path
 
-# Path to video or live stream
-capture = '/Users/gabri/School/Senior/cattle_vid.mp4'  # Replace with your video path or use 0 for webcam
+# Initialize the tracker
+tracker = BotSort(
+    reid_weights=Path('osnet_x0_25_msmt17.pt'),  # Path to ReID model
+    device=device,
+    half=False
+)
 
-# Open video capture
-cap = cv2.VideoCapture(capture)
+input_size = 640  # YOLOv8's default input size
 
-while cap.isOpened():
-    ret, frame = cap.read()
+# Open the video file
+vid = cv2.VideoCapture("/Users/gabri/School/Senior/cattle_vid.mp4")
+
+while True:
+    ret, frame = vid.read()
+
     if not ret:
         break
 
-    # Run inference on the frame
-    results = model.predict(source=frame, show=False, save=False, conf=0.5)  # conf is the confidence threshold
+    frame_letterbox, ratio, (dw, dh) = letterbox(frame, new_shape=input_size, auto=False, scaleFill=True)
 
-    # Annotate detections
-    annotated_frame = results[0].plot()  # Draw bounding boxes and labels on frame
+    # YOLOv8 inference
+    results = model(frame_letterbox)[0]
 
-    # Display the frame
-    cv2.imshow('YOLOv8 Cow Detection', annotated_frame)
+    detections = []
+    for box in results.boxes.data:
+        x1, y1, x2, y2, conf, cls = box.tolist()
+        if conf > 0.3:
+            detections.append([x1, y1, x2, y2, conf, int(cls)])
 
-    # Exit with 'q'
+    # Rescale coordinates
+    detections = np.array(detections)
+    detections[:, 0] = (detections[:, 0] - dw) / ratio[0]
+    detections[:, 1] = (detections[:, 1] - dh) / ratio[1]
+    detections[:, 2] = (detections[:, 2] - dw) / ratio[0]
+    detections[:, 3] = (detections[:, 3] - dh) / ratio[1]
+
+    # Update the tracker
+    res = tracker.update(detections, frame)
+
+    # Plot tracking results
+    tracker.plot_results(frame, show_trajectories=True)
+
+    cv2.imshow('BoXMOT + YOLOv8', frame)
+
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
 
-# Release resources
-cap.release()
+vid.release()
 cv2.destroyAllWindows()

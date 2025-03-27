@@ -1,5 +1,17 @@
-path: \Users\gabri\School\Senior\Dataset
+path: C:/Users/gabri/School/Senior/Dataset  # Use absolute path
 train: train/images
 val: val/images
+
+nc: 2  # Number of classes
 names:
   0: cow
+  1: person
+  #2: Spotted_Cow_1
+  #3: Spotted_Cow_2
+  #4: Brown_Cow_1
+  #5: Spotted_Calve_1
+  #6: Spotted_Calve_2
+  #7: Friendly_Farmer
+  #8: Brown_Cow_2
+  #9: Spotted_Cow_3
+  #10: person

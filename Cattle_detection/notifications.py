@@ -31,4 +31,4 @@ def send_fcm_alert(message: str, fcm_server_key: str, DEVICE_TOKEN: str) -> None
         print("Alert sent successfully!")
     except requests.exceptions.RequestException as e:
         print(f"Failed to send alert: {str(e)}")
-        print(f"Response: {response.text}")
+        print(f"Response: {response.text}") 

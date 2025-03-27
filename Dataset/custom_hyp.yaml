@@ -1,0 +1,7 @@
+hsv_h: 0.05        # Hue shift  
+hsv_s: 0.8         # Saturation boost  
+hsv_v: 0.5         # Value (brightness) boost  
+mixup: 0.3         # Blend images together  
+fliplr: 0.5        # Horizontal flip  
+flipud: 0.1        # Vertical flip  
+mosaic: 0.2        # Mosaic during training  

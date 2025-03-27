@@ -7,7 +7,8 @@ from ultralytics import YOLO
 #import cv2
 
 # Load the YOLOv8 model
-model = YOLO('yolov8x.pt')  # Use 'yolov8n.pt', 'yolov8l.pt', etc., for different versions
+model = YOLO('yolov8x.pt')  # Use 'yolov8n.pt', 'yolov8l.pt', etc., for different version
+#model = YOLO('runs/detect/train32/weights/best.pt')  # Load the trained model
 
 # Path to video or live stream
 #capture = '/Users/gabri/School/Senior/cattle_vid.mp4'  # /Users/gabri/School/Senior/cattle_vid.mp4 Replace with your video path or use 0 for webcam
